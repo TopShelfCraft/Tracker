@@ -20,9 +20,9 @@ To track a page view:
 	user_account: 'UA-12345-67',
 	location: 'http://myawesomesite.com/foo.html',
 	page_title: 'My Page Title'
-}
+} %}
 
-craft.tracker.track(params)
+{% do craft.tracker.track(params) %}
 ```
 
 To track an event:
@@ -36,9 +36,9 @@ To track an event:
 	eventAction': 'Play button',
 	eventLabel: 'The Beatles - Yesterday',
 	eventValue: '1461603558'
-}
+} %}
 
-craft.tracker.track(params)
+{% do craft.tracker.track(params) %}
 ```
 
 From PHP, using the Helper class:
