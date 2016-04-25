@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2016, Michael Rog
  * @license   http://topshelfcraft.com/license
  * @see       http://topshelfcraft.com
- * @package   craft.plugins.printmaker
+ * @package   craft.plugins.tracker
  * @since     1.0
  */
 

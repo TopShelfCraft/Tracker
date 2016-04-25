@@ -59,8 +59,7 @@ class TrackerPlugin extends BasePlugin
      */
     public function getDocumentationUrl()
     {
-        // TODO: Add docs URL
-        return false;
+        return 'https://github.com/TopShelfCraft/Tracker';
     }
 
     /**
@@ -90,8 +89,7 @@ class TrackerPlugin extends BasePlugin
      */
     public function getReleaseFeedUrl()
     {
-        // TODO: Add release feed URL
-        return false;
+        return 'https://github.com/TopShelfCraft/Tracker/raw/master/releases.json';
     }
 
     /**
