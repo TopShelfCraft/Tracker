@@ -17,9 +17,9 @@ To track a page view:
 
 ```twig
 {% set params = {
-	user_account: 'UA-12345-67',
+	trackingId: 'UA-12345-67',
 	location: 'http://myawesomesite.com/foo.html',
-	page_title: 'My Page Title'
+	title: 'My Page Title'
 } %}
 
 {% do craft.tracker.track(params) %}
@@ -29,7 +29,7 @@ To track an event:
 
 ```twig
 {% set params = {
-	user_account: 'UA-12345-67',
+	trackingId: 'UA-12345-67',
 	location: 'http://myawesomesite.com/foo.html',
 	type: 'event',
 	eventCategory: 'Music Player',
