@@ -33,7 +33,7 @@ To track an event:
 	location: 'http://myawesomesite.com/foo.html',
 	type: 'event',
 	eventCategory: 'Music Player',
-	eventAction': 'Play button',
+	eventAction: 'Play button',
 	eventLabel: 'The Beatles - Yesterday',
 	eventValue: '1461603558'
 } %}
