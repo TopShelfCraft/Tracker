@@ -1,14 +1,15 @@
 # Tracker
 
-_A Google Analytics tracking helper for CraftCMS_
+_A server-side Google Analytics tracking helper for CraftCMS_
 
-by Michael Rog  
-[http://topshelfcraft.com](http://topshelfcraft.com)
+**A [Top Shelf Craft](https://topshelfcraft.com) creation**  
+[Michael Rog](https://michaelrog.com), Proprietor
+
+
+* * *
 
 
 _Tracker_ provides a helper method to allow sending Google Analtyics tracker hits programatically from CraftCMS templates or services.
-
-* * *
 
 
 ### Usage
@@ -44,16 +45,19 @@ To track an event:
 From PHP, using the Helper class:
 
 ```php
-$params = array(
-    'location' => craft()->request->getUrl(),
+use topshelfcraft\tracker\Tracker;
+
+$params = [
+    'location' => Craft::$app->request->getUrl(),
     'clientId' => $currentUserId,
     'type' => 'pageview',
     'trackingId' => $trackingId,
     'version' => '1',
-);
+];
 
-TrackerHelper::track($params);
+Tracker::getInstance()->track($params);
 ```
+
 
 ### Parameters listing
 
@@ -211,6 +215,7 @@ The full map is defined in `$googleParamNames`, which can be found in `TrackerHe
 );
 ```
 
+
 ### Configuration
 
 The _Tracker_ plugin config file allows you to set the default Tracking ID, as well as to provide default parameters for the site and/or environment:
@@ -218,11 +223,11 @@ The _Tracker_ plugin config file allows you to set the default Tracking ID, as w
 ```php
 // (in craft/config/tracker.php)
 
-return array(
+return [
 	'trackingId' => 'UA-XXXXXX-XX',
-	'defaultParams' => array(),
-	'environmentParams' => array(),
-);
+	'defaultParams' => [],
+	'environmentParams' => [],
+];
 ```
 
 The `defaultParams` and `environmentParams` lists work the same way: Default parameters you provide will be added to each request, before the user-provided parameters are added from the method call. `defaultParams` is applied first, then `environmentParams` is merged in. This two-array setup allows you to specify a more general set of parameters in your master (`'*'`) environment, and then override them with smaller more specific sets of parameters on a per-environment basis, using Craft's [Multi-Environment Config](https://craftcms.com/docs/multi-environment-configs) setup.
@@ -230,17 +235,16 @@ The `defaultParams` and `environmentParams` lists work the same way: Default par
 
 ### What are the system requirements?
 
-Craft 2.5+
-
+Craft 3.0+
 
 
 ### I found a bug.
 
-Please open a GitHub Issue, submit a PR, or just email me to let me know.
-
+Please open a GitHub Issue, or if you're feeling generous, submit a PR to the `3.x.dev` branch.
 
 
 * * *
+
 
 #### Contributors:
 

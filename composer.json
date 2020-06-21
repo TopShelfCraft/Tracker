@@ -1,0 +1,50 @@
+{
+	"name": "topshelfcraft/tracker",
+	"type": "craft-plugin",
+	"description": "A handy server-side Google Analytics tracking helper for CraftCMS",
+	"version": "3.0.0",
+	"keywords": [
+		"craft",
+		"cms",
+		"craftcms",
+		"plugin",
+		"tracker",
+		"tracking",
+		"google analytics",
+		"analytics",
+		"development",
+		"utilities"
+	],
+	"license": "proprietary",
+	"homepage": "https://topshelfcraft.com",
+	"authors": [
+		{
+			"name": "Top Shelf Craft (Michael Rog)",
+			"homepage": "https://topshelfcraft.com"
+		}
+	],
+	"support": {
+		"email": "support@topshelfcraft.com",
+		"issues": "https://github.com/TopShelfCraft/Tracker/issues",
+		"source": "https://github.com/TopShelfCraft/Tracker",
+		"docs": "https://github.com/TopShelfCraft/Tracker"
+	},
+	"require": {
+		"php": ">=7",
+		"craftcms/cms": "^3.0",
+		"topshelfcraft/ranger": "^3.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"topshelfcraft\\tracker\\": "src/"
+		}
+	},
+	"extra": {
+		"name": "Tracker",
+		"handle": "tracker",
+		"schemaVersion": "3.0.0.0",
+		"hasSettings": false,
+		"hasCpSection": false,
+		"class": "topshelfcraft\\tracker\\Tracker"
+	}
+}
