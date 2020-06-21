@@ -9,7 +9,22 @@ _A server-side Google Analytics tracking helper for CraftCMS_
 * * *
 
 
-_Tracker_ provides a helper method to allow sending Google Analtyics tracker hits programatically from CraftCMS templates or services.
+_Tracker_ provides a helper method for sending Google Analtyics tracker hits programatically from CraftCMS templates or services.
+
+
+## Installation
+
+1. From your project directory, use Composer to require the plugin package:
+
+   ```
+   composer require topshelfcraft/tracker
+   ```
+
+2. In the Control Panel, go to Settings → Plugins and click the “Install” button for Tracker.
+
+3. There is no Step 3.
+
+_(Tracker is also available for installation via the Craft CMS Plugin Store.)_
 
 
 ### Usage
@@ -77,7 +92,7 @@ The parameter names aren't very friendly, so the _Tracker_ plugin gives you a fr
 | `v` | `version` | The Universal Analytics API version (most likely, `1`) |
 
 
-The full map is defined in `$googleParamNames`, which can be found in `TrackerHelper.php`:
+The full map is defined in the `GoogleParamNames` constant in `Settings.php`:
 
 ```php
 /*
@@ -221,16 +236,15 @@ The full map is defined in `$googleParamNames`, which can be found in `TrackerHe
 The _Tracker_ plugin config file allows you to set the default Tracking ID, as well as to provide default parameters for the site and/or environment:
 
 ```php
-// (in craft/config/tracker.php)
+// (in tracker.php config file)
 
 return [
 	'trackingId' => 'UA-XXXXXX-XX',
 	'defaultParams' => [],
-	'environmentParams' => [],
 ];
 ```
 
-The `defaultParams` and `environmentParams` lists work the same way: Default parameters you provide will be added to each request, before the user-provided parameters are added from the method call. `defaultParams` is applied first, then `environmentParams` is merged in. This two-array setup allows you to specify a more general set of parameters in your master (`'*'`) environment, and then override them with smaller more specific sets of parameters on a per-environment basis, using Craft's [Multi-Environment Config](https://craftcms.com/docs/multi-environment-configs) setup.
+Any default parameters you provide will be added to each request, before the user-provided parameters are added from the method call. 
 
 
 ### What are the system requirements?

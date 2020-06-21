@@ -76,25 +76,11 @@ class Tracker extends BasePlugin
 			'version' => '1',
 		];
 
-		// Instantiate our new params array with the bare minimum
-
-		$assembledParams = static::googleizeParams($defaults);
-
-		// Merge in any general site defaults that are set in the plugin config file.
-
-		$assembledParams = array_merge($assembledParams, static::googleizeParams($settings->defaultParams));
-
-		// Merge in any environment defaults that are set in the plugin config file.
-
-		$assembledParams = array_merge($assembledParams, static::googleizeParams($settings->environmentParams));
-
-		// Merge in any user-provided params for this request
-
-		$assembledParams = array_merge($assembledParams, static::googleizeParams($params));
-
-		// Return the final assembled list
-
-		return $assembledParams;
+		return array_merge(
+			static::googleizeParams($defaults),
+			static::googleizeParams($settings->defaultParams),
+			static::googleizeParams($params)
+		);
 
 	}
 
@@ -106,7 +92,7 @@ class Tracker extends BasePlugin
 	 *
 	 * @return array
 	 */
-	public static function googleizeParams(array $params)
+	public static function googleizeParams(array $params = [])
 	{
 
 		$googleizedParams = [];

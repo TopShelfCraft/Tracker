@@ -22,11 +22,6 @@ class Settings extends Model
 	public $defaultParams = [];
 
 	/**
-	 * @var array
-	 */
-	public $environmentParams = [];
-
-	/**
 	 * @var array A map of Google Analytics parameter names to more friendly handles for our template developers.
 	 */
 	const GoogleParamNames = [
