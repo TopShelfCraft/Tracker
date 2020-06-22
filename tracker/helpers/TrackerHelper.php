@@ -153,6 +153,47 @@ class TrackerHelper
 
     );
 
+	/**
+	 * Uses the current user's IP address to generate a valid UUID. If the IP address isn't provided
+	 * or isn't valid, we use a generic string instead.
+	 *
+	 * @param $ip string The current user's IP address, if available.
+	 *
+	 * @return string A valid UUID in the v4 format (as described at http://www.ietf.org/rfc/rfc4122.txt)
+	 */
+	public static function generateClientId($ip) {
+
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+		{
+			$parts = array_map(function ($part) {
+				return str_pad($part, 3, '0', STR_PAD_LEFT);
+			}, explode('.', $ip));
+
+			$data = implode($parts);
+		}
+		elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+		{
+			$parts = array_map(function ($part) {
+				return str_pad($part, 4, '0', STR_PAD_LEFT);
+			}, explode(':', $ip));
+
+			$data = implode($parts);
+		}
+		else
+		{
+			$data = str_repeat(0,32);
+		}
+
+		$uuid = str_pad($data, 32, '0', STR_PAD_LEFT);
+		$uuid[12] = 4;
+		$accepted = ['a', 'b', 8, 9];
+		if (!in_array($uuid[16], $accepted, false)) {
+			$uuid[16] = 8;
+		}
+
+		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($uuid, 4));
+	}
+
     /**
      * Consumes an array of user-provided parameters,
      * merges the user-provided parameters with several layers of pre-defined default parameters,
@@ -164,16 +205,12 @@ class TrackerHelper
      */
     public static function getTrackerParams($params = array())
     {
-
-        // TODO: Change CID param to use GA's actual Client ID number (from cookie?)
-        $currentUser = craft()->userSession->getUser();
-        $currentUserId = is_null($currentUser) ? 0 : $currentUser->id;
-
-        $trackingId = craft()->config->get('trackingId', 'tracker');
+		$clientId = static::generateClientId(craft()->request->getIpAddress());
+		$trackingId = craft()->config->get('trackingId', 'tracker');
 
         $defaults = array(
             'location' => craft()->request->getUrl(),
-            'clientId' => $currentUserId,
+            'clientId' => $clientId,
             'type' => 'pageview',
             'trackingId' => $trackingId,
             'version' => '1',
@@ -279,16 +316,22 @@ class TrackerHelper
     public static function track($params = array())
     {
 
-        $trackerParams = static::getTrackerParams($params);
-        $encodedParams = static::encodeParams($trackerParams);
-
-        $gaUrl = UrlHelper::getUrl('//www.google-analytics.com/collect', $encodedParams, 'https');
+    	$trackerParams = static::getTrackerParams($params);
+		// Removed because params are already encoded by Guzzle
+		// $encodedParams = static::encodeParams($trackerParams);
 
         try
         {
 
             $client = new \Guzzle\Http\Client();
-            $request = $client->get($gaUrl);
+            $request = $client->post(
+            	'https://www.google-analytics.com/collect',
+				[
+					'User-Agent' => craft()->request->getUserAgent()
+				],
+				$trackerParams
+			);
+			$gaUrl = UrlHelper::getUrl($request->getUrl(), $trackerParams);
             $response = $request->send();
 
             if ($response->isSuccessful())
