@@ -176,7 +176,8 @@ class Tracker extends BasePlugin
 
 			$client = Craft::createGuzzleClient([
 				'headers' => [
-					 'user-agent' => 'Craft/' . Craft::$app->getVersion() . ' Tracker/' . $this->getVersion(),
+					 'User-Agent' => Craft::$app->request->getUserAgent()
+						 ?? ('Craft/' . Craft::$app->getVersion() . ' Tracker/' . $this->getVersion()),
 				],
 			]);
 
