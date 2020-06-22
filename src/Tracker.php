@@ -51,6 +51,48 @@ class Tracker extends BasePlugin
 	}
 
 	/**
+	 * Uses a current user's IP address to generate a valid UUID, with some slight tweaking to conform with
+	 * Google Analytics's internals. (If the IP address isn't provided or isn't valid, we use a generic string instead.)
+	 *
+	 * @param $ip string The current user's IP address
+	 *
+	 * @return string A valid UUID in the v4 format (as described at http://www.ietf.org/rfc/rfc4122.txt)
+	 */
+	public static function generateClientId($ip)
+	{
+
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+		{
+			$parts = array_map(function ($part) {
+				return str_pad($part, 3, '0', STR_PAD_LEFT);
+			}, explode('.', $ip));
+
+			$data = implode($parts);
+		}
+		elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+		{
+			$parts = array_map(function ($part) {
+				return str_pad($part, 4, '0', STR_PAD_LEFT);
+			}, explode(':', $ip));
+
+			$data = implode($parts);
+		}
+		else
+		{
+			$data = str_repeat(0,32);
+		}
+
+		$uuid = str_pad($data, 32, '0', STR_PAD_LEFT);
+		$uuid[12] = 4;
+		$accepted = ['a', 'b', 8, 9];
+		if (!in_array($uuid[16], $accepted, false)) {
+			$uuid[16] = 8;
+		}
+
+		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($uuid, 4));
+	}
+
+	/**
 	 * Consumes an array of user-provided parameters,
 	 * merges the user-provided parameters with several layers of pre-defined default parameters,
 	 * and returns the combined list (with Google-style param handles).
@@ -66,11 +108,11 @@ class Tracker extends BasePlugin
 
 		$settings = $this->getSettings();
 
-		// TODO: Change CID param to use GA's actual Client ID number (from cookie?)
-
 		$defaults = [
 			'location' => Craft::$app->request->getUrl(),
-			'clientId' => Craft::$app->getUser()->getId() ?? 0,
+			'clientId' => static::generateClientId(
+				Craft::$app->request->getUserIP(FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)
+			),
 			'type' => 'pageview',
 			'trackingId' => $settings->trackingId,
 			'version' => '1',
